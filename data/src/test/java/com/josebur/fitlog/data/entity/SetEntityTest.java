@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class SetEntityTest {
     @Rule
@@ -43,5 +44,18 @@ public class SetEntityTest {
         SetEntity set = new SetEntity(1);
 
         assertEquals(expected, set.toString());
+    }
+
+    @Test
+    public void equalsTest() {
+        SetEntity a = new SetEntity(1);
+        SetEntity b = new SetEntity(1);
+        SetEntity c = new SetEntity(2);
+
+        assertEquals(a, a);
+        assertEquals(a, b);
+        assertEquals(b, a);
+        assertNotEquals(a, c);
+        assertNotEquals(a, null);
     }
 }

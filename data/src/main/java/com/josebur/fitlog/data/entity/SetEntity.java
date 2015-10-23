@@ -36,4 +36,20 @@ public class SetEntity {
     public String toString() {
         return "Set: " + setNumber;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SetEntity setEntity = (SetEntity) o;
+
+        return setNumber == setEntity.setNumber;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return setNumber;
+    }
 }

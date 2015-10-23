@@ -39,4 +39,13 @@ public class SessionTest {
 
         assertEquals(sets, session.getSets());
     }
+
+    @Test
+    public void equalsTest() {
+        Session a = new Session("Squat", 5, Collections.<Set>emptyList());
+        Session b = new Session("Squat", 5, Collections.<Set>emptyList());
+
+        assertEquals(a, a);
+        assertEquals(a, b);
+    }
 }

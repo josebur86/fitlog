@@ -24,4 +24,25 @@ public class Session {
     public List<Set> getSets() {
         return sets;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Session session = (Session) o;
+
+        if (repGoal != session.repGoal) return false;
+        if (!exercise.equals(session.exercise)) return false;
+        return sets.equals(session.sets);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = exercise.hashCode();
+        result = 31 * result + repGoal;
+        result = 31 * result + sets.hashCode();
+        return result;
+    }
 }

@@ -78,4 +78,30 @@ public class SessionEntity {
     public List<SetEntity> getSets() {
         return sets;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SessionEntity that = (SessionEntity) o;
+
+        if (id != that.id) return false;
+        if (userId != that.userId) return false;
+        if (workoutId != that.workoutId) return false;
+        if (exerciseId != that.exerciseId) return false;
+        if (repGoal != that.repGoal) return false;
+        return sets.equals(that.sets);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + userId;
+        result = 31 * result + workoutId;
+        result = 31 * result + exerciseId;
+        result = 31 * result + repGoal;
+        result = 31 * result + sets.hashCode();
+        return result;
+    }
 }

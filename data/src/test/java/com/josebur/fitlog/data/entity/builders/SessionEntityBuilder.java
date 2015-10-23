@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SessionBuilder {
+public class SessionEntityBuilder {
     private int id = 1;
     private int userId = 1;
     private int workoutId = 1;
@@ -15,37 +15,37 @@ public class SessionBuilder {
     private int repGoal = 1;
     private List<SetEntity> sets = Collections.emptyList();
 
-    public SessionBuilder withId(int id) {
+    public SessionEntityBuilder withId(int id) {
         this.id = id;
         return this;
     }
 
-    public SessionBuilder withUserId(int userId) {
+    public SessionEntityBuilder withUserId(int userId) {
         this.userId = userId;
         return this;
     }
 
-    public SessionBuilder withWorkoutId(int workoutId) {
+    public SessionEntityBuilder withWorkoutId(int workoutId) {
         this.workoutId = workoutId;
         return this;
     }
 
-    public SessionBuilder withExerciseId(int exerciseId) {
+    public SessionEntityBuilder withExerciseId(int exerciseId) {
         this.exerciseId = exerciseId;
         return this;
     }
 
-    public SessionBuilder withRepGoal(int repGoal) {
+    public SessionEntityBuilder withRepGoal(int repGoal) {
         this.repGoal = repGoal;
         return this;
     }
 
-    public SessionBuilder withSets(List<SetEntity> sets) {
+    public SessionEntityBuilder withSets(List<SetEntity> sets) {
         this.sets = sets;
         return this;
     }
 
-    public SessionBuilder withSquatSession() {
+    public SessionEntityBuilder withSquatSession() {
         repGoal = 5;
         sets = new ArrayList<>();
         sets.add(new SetEntity(1));
