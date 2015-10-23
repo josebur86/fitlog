@@ -45,6 +45,17 @@ public class SessionBuilder {
         return this;
     }
 
+    public SessionBuilder withSquatSession() {
+        repGoal = 5;
+        sets = new ArrayList<>();
+        sets.add(new SetEntity(1));
+        sets.add(new SetEntity(2));
+        sets.add(new SetEntity(3));
+        sets.add(new SetEntity(4));
+        sets.add(new SetEntity(5));
+        return this;
+    }
+
     public SessionEntity build() {
         return new SessionEntity(id, userId, workoutId, exerciseId, repGoal, sets);
     }

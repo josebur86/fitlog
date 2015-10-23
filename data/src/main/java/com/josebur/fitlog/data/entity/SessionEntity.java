@@ -31,6 +31,10 @@ public class SessionEntity {
         this.sets = sets;
     }
 
+    /**
+     * Returns the id for this session.
+     * @return the id
+     */
     public int getId() {
         return id;
     }
