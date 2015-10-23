@@ -9,6 +9,7 @@ import com.josebur.fitlog.domain.Set;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: this class should use a mapper to create instances
 public class SessionRepository {
     private final SessionStore sessionStore;
 
