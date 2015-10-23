@@ -3,6 +3,7 @@ package com.josebur.fitlog.data.entity.repository;
 import com.josebur.fitlog.data.entity.SessionEntity;
 import com.josebur.fitlog.data.entity.builders.SessionBuilder;
 import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
+import com.josebur.fitlog.domain.Session;
 
 import org.junit.Test;
 
@@ -19,10 +20,10 @@ public class SessionRepositoryTest {
         when(sessionStore.storeSession(any(SessionEntity.class))).thenReturn(true);
         SessionRepository repository = new SessionRepository(sessionStore);
 
-        SessionEntity session = new SessionBuilder().withSquatSession().build();
+        Session session = new Session("Squat", 5);
         boolean result = repository.saveSession(session);
 
         assertTrue("saveSession returned false", result);
-        verify(sessionStore).storeSession(session);
+        verify(sessionStore).storeSession(any(SessionEntity.class));
     }
 }
