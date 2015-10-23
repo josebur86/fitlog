@@ -15,10 +15,13 @@ public class SessionRepository {
     }
 
     public boolean saveSession(Session session) {
-
         SessionEntity entity =
                 new SessionEntity(1, 1, 1, 1, session.getRepGoal(), Collections.<SetEntity>emptyList());
-
         return sessionStore.storeSession(entity);
+    }
+
+    public Session loadSession(int sessionId) {
+        SessionEntity entity = sessionStore.retrieveSession(sessionId);
+        return new Session("Squat", entity.getRepGoal(), null);
     }
 }
