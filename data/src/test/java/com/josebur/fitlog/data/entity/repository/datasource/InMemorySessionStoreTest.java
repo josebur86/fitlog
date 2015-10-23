@@ -17,8 +17,7 @@ public class InMemorySessionStoreTest {
         boolean result = store.storeSession(session);
         assertTrue("storeSession returned false", result);
 
-        int sessionId = 1; // TODO: add session id to sessionentity
-        SessionEntity retrievedSession = store.retrieveSession(sessionId);
+        SessionEntity retrievedSession = store.retrieveSession(session.getId());
 
         // TODO: implement equals so that assertEquals can be called once here
         assertEquals(session.getUserId(), retrievedSession.getUserId());
