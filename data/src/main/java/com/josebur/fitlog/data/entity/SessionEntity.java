@@ -6,6 +6,7 @@ import java.util.List;
  * Workout Session entity that is used at the data layer.
  */
 public class SessionEntity {
+    private final int id;
     private final int userId;
     private final int workoutId;
     private final int exerciseId;
@@ -14,18 +15,24 @@ public class SessionEntity {
 
     /**
      * Constructs a session for a workout.
+     * @param id the id of this session
      * @param userId the id of the user for this session
      * @param workoutId the id of the workout for this session
      * @param exerciseId the id of the exercise for this session
      * @param repGoal the exercise repetitions goal for this session
      * @param sets the {@link SetEntity} list for this session
      */
-    public SessionEntity(int userId, int workoutId, int exerciseId, int repGoal, List<SetEntity> sets) {
+    public SessionEntity(int id, int userId, int workoutId, int exerciseId, int repGoal, List<SetEntity> sets) {
+        this.id = id;
         this.userId = userId;
         this.workoutId = workoutId;
         this.exerciseId = exerciseId;
         this.repGoal = repGoal;
         this.sets = sets;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**

@@ -10,6 +10,19 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class SessionEntityTest {
+
+    @Test
+    public void sessionHasAnId() {
+        int id = 1;
+        int id2 = 2;
+
+        SessionEntity session = new SessionBuilder().withId(id).build();
+        SessionEntity session2 = new SessionBuilder().withId(id2).build();
+
+        assertEquals(id, session.getId());
+        assertEquals(id2, session2.getId());
+    }
+
     @Test
     public void sessionHasAUserId() {
         int userId = 1;
