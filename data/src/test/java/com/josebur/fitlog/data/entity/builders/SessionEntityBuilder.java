@@ -46,6 +46,7 @@ public class SessionEntityBuilder {
     }
 
     public SessionEntityBuilder withSquatSession() {
+        id = 999;
         repGoal = 5;
         sets = new ArrayList<>();
         sets.add(new SetEntity(1));

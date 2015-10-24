@@ -2,6 +2,8 @@ package com.josebur.fitlog.data.entity.repository;
 
 import com.josebur.fitlog.data.entity.SessionEntity;
 import com.josebur.fitlog.data.entity.builders.SessionEntityBuilder;
+import com.josebur.fitlog.data.entity.mapper.SessionEntityDomainMapper;
+import com.josebur.fitlog.data.entity.mapper.SetEntityDomainMapper;
 import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
 import com.josebur.fitlog.domain.Session;
 import com.josebur.fitlog.domain.Set;
@@ -16,7 +18,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -30,6 +31,7 @@ public class SessionRepositoryTest {
     public ExpectedException thrown = ExpectedException.none();
 
     private List<Set> sets;
+    private SessionEntityDomainMapper mapper;
 
     @Before
     public void setup() {
@@ -39,19 +41,27 @@ public class SessionRepositoryTest {
         sets.add(new Set(3));
         sets.add(new Set(4));
         sets.add(new Set(5));
+
+        mapper = new SessionEntityDomainMapper(new SetEntityDomainMapper());
     }
 
     @Test
     public void repositoryThrowsIfSessionStoreIsNull() {
         thrown.expect(IllegalArgumentException.class);
-        new SessionRepository(null);
+        new SessionRepository(null, null);
+    }
+
+    @Test
+    public void repositoryThrowsIfMapperIsNull() {
+        thrown.expect(IllegalArgumentException.class);
+        new SessionRepository(mock(SessionStore.class), null);
     }
 
     @Test
     public void repositoryCanSaveASession() {
         SessionStore sessionStore = mock(SessionStore.class);
         when(sessionStore.storeSession(any(SessionEntity.class))).thenReturn(true);
-        SessionRepository repository = new SessionRepository(sessionStore);
+        SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
         Session session = new Session("Squat", 5, sets);
         boolean result = repository.saveSession(session);
@@ -63,7 +73,7 @@ public class SessionRepositoryTest {
 
     @Test
     public void repositoryWillReturnFalseWhenSavingNullSession() {
-        SessionRepository repository = new SessionRepository(mock(SessionStore.class));
+        SessionRepository repository = new SessionRepository(mock(SessionStore.class), mapper);
 
         boolean result = repository.saveSession(null);
 
@@ -79,7 +89,7 @@ public class SessionRepositoryTest {
                 .withId(sessionId)
                 .build();
         when(sessionStore.retrieveSession(anyInt())).thenReturn(sessionEntity);
-        SessionRepository repository = new SessionRepository(sessionStore);
+        SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
         Session session = repository.loadSession(sessionId);
 
@@ -92,7 +102,7 @@ public class SessionRepositoryTest {
     public void repositoryReturnsNullWhenStoreDoesNotHaveSession() {
         SessionStore sessionStore = mock(SessionStore.class);
         when(sessionStore.retrieveSession(anyInt())).thenReturn(null);
-        SessionRepository repository = new SessionRepository(sessionStore);
+        SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
         Session session = repository.loadSession(1);
 

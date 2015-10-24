@@ -2,6 +2,7 @@ package com.josebur.fitlog.data.entity.repository;
 
 import com.josebur.fitlog.data.entity.SessionEntity;
 import com.josebur.fitlog.data.entity.SetEntity;
+import com.josebur.fitlog.data.entity.mapper.SessionEntityDomainMapper;
 import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
 import com.josebur.fitlog.domain.Session;
 import com.josebur.fitlog.domain.Set;
@@ -18,15 +19,18 @@ import java.util.List;
  */
 public class SessionRepository {
     private final SessionStore sessionStore;
+    private final SessionEntityDomainMapper mapper;
 
     /**
      * Creates a SessionRepository.
      * @param sessionStore a storage mechanism for the repository to use.
-     * @throws IllegalArgumentException if the sessionStore is null.
+     * @throws IllegalArgumentException if the sessionStore or mapper is null.
      */
-    public SessionRepository(SessionStore sessionStore) {
+    public SessionRepository(SessionStore sessionStore, SessionEntityDomainMapper mapper) {
         if (sessionStore == null) throw new IllegalArgumentException("sessionStore");
+        if (mapper == null) throw new IllegalArgumentException("mapper");
         this.sessionStore = sessionStore;
+        this.mapper = mapper;
     }
 
     /**
@@ -36,12 +40,7 @@ public class SessionRepository {
      */
     public boolean saveSession(Session session) {
         if (session == null) return false;
-        List<SetEntity> setEntities = new ArrayList<>();
-        for (Set set : session.getSets()) {
-            setEntities.add(new SetEntity(set.getSetNumber()));
-        }
-        SessionEntity entity =
-                new SessionEntity(1, 1, 1, 1, session.getRepGoal(), setEntities);
+        SessionEntity entity = mapper.toEntity(session);
         return sessionStore.storeSession(entity);
     }
 
@@ -53,10 +52,7 @@ public class SessionRepository {
     public Session loadSession(int sessionId) {
         SessionEntity entity = sessionStore.retrieveSession(sessionId);
         if (entity == null) return null;
-        List<Set> sets = new ArrayList<>();
-        for (SetEntity setEntity : entity.getSets()) {
-            sets.add(new Set(setEntity.getSetNumber()));
-        }
-        return new Session("Squat", entity.getRepGoal(), sets);
+
+        return mapper.toDomainModel(entity);
     }
 }

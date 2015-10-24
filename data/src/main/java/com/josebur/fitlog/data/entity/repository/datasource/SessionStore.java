@@ -5,6 +5,7 @@ import com.josebur.fitlog.data.entity.SessionEntity;
 /**
  * SessionStore handles persisting {@link SessionEntity} objects.
  */
+// TODO: consider returning Observables here.
 public interface SessionStore {
     /**
      * Stores a {@link SessionEntity}.

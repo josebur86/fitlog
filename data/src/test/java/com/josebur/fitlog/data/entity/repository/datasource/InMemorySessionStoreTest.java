@@ -6,7 +6,6 @@ import com.josebur.fitlog.data.entity.builders.SessionEntityBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class InMemorySessionStoreTest {
@@ -31,7 +30,6 @@ public class InMemorySessionStoreTest {
 
         SessionEntity expectedSession = new SessionEntityBuilder()
                 .withSquatSession()
-                .withId(999)
                 .build();
         assertEquals(expectedSession, session);
     }
