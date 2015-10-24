@@ -5,32 +5,50 @@ import com.josebur.fitlog.data.entity.builders.SessionEntityBuilder;
 
 import org.junit.Test;
 
+import rx.Observable;
+import rx.functions.Action1;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class InMemorySessionStoreTest {
     @Test
     public void sessionCanBeStoredAndRetrieved() {
-        SessionEntity session = new SessionEntityBuilder().withSquatSession().build();
+        final SessionEntity session = new SessionEntityBuilder().withSquatSession().build();
         SessionStore store = new InMemorySessionStore();
 
-        boolean result = store.storeSession(session);
-        assertTrue("storeSession returned false", result);
+        Observable<Boolean> result = store.storeSession(session);
+        result.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean result) {
+                assertTrue("storeSession returned false", result);
+            }
+        });
 
-        SessionEntity retrievedSession = store.retrieveSession(session.getId());
+        final Observable<SessionEntity> retrievedSession = store.retrieveSession(session.getId());
+        retrievedSession.subscribe(new Action1<SessionEntity>() {
+            @Override
+            public void call(SessionEntity sessionEntity) {
+                assertEquals(session, sessionEntity);
+            }
+        });
 
-        assertEquals(session, retrievedSession);
     }
 
     @Test
     public void retrieveThePrepopulatedSession() {
         SessionStore store = new InMemorySessionStore();
 
-        SessionEntity session = store.retrieveSession(999);
+        Observable<SessionEntity> session = store.retrieveSession(999);
 
-        SessionEntity expectedSession = new SessionEntityBuilder()
+        final SessionEntity expectedSession = new SessionEntityBuilder()
                 .withSquatSession()
                 .build();
-        assertEquals(expectedSession, session);
+        session.subscribe(new Action1<SessionEntity>() {
+            @Override
+            public void call(SessionEntity sessionEntity) {
+                assertEquals(expectedSession, sessionEntity);
+            }
+        });
     }
 }

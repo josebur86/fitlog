@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
+
 /**
  * In memory implementation of the {@link SessionStore}.
  *
@@ -31,13 +33,13 @@ public class InMemorySessionStore implements SessionStore {
     }
 
     @Override
-    public boolean storeSession(SessionEntity session) {
+    public Observable<Boolean> storeSession(SessionEntity session) {
         sessions.put(session.getId(), session);
-        return true;
+        return Observable.just(true);
     }
 
     @Override
-    public SessionEntity retrieveSession(int sessionId) {
-        return sessions.get(sessionId);
+    public Observable<SessionEntity> retrieveSession(int sessionId) {
+        return Observable.just(sessions.get(sessionId));
     }
 }

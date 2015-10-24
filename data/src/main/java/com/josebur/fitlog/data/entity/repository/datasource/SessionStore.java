@@ -2,22 +2,23 @@ package com.josebur.fitlog.data.entity.repository.datasource;
 
 import com.josebur.fitlog.data.entity.SessionEntity;
 
+import rx.Observable;
+
 /**
  * SessionStore handles persisting {@link SessionEntity} objects.
  */
-// TODO: consider returning Observables here.
 public interface SessionStore {
     /**
      * Stores a {@link SessionEntity}.
-     * @param session the session to store
-     * @return true if successful, false otherwise
+     * @param session the session to store.
+     * @return {@link Observable} to a status boolean.
      */
-    boolean storeSession(SessionEntity session);
+    Observable<Boolean> storeSession(SessionEntity session);
 
     /**
      * Retrieves a {@link SessionEntity} with the given ID.
      * @param sessionId the ID of the session to retrieve.
-     * @return the session if successful, null otherwise.
+     * @return {@link Observable} to the session.
      */
-    SessionEntity retrieveSession(int sessionId);
+    Observable<SessionEntity> retrieveSession(int sessionId);
 }

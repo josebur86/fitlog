@@ -16,6 +16,9 @@ import org.junit.rules.ExpectedException;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.functions.Action1;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -60,24 +63,33 @@ public class SessionRepositoryTest {
     @Test
     public void repositoryCanSaveASession() {
         SessionStore sessionStore = mock(SessionStore.class);
-        when(sessionStore.storeSession(any(SessionEntity.class))).thenReturn(true);
+        when(sessionStore.storeSession(any(SessionEntity.class))).thenReturn(Observable.just(true));
         SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
         Session session = new Session("Squat", 5, sets);
-        boolean result = repository.saveSession(session);
-
-        assertTrue("saveSession returned false", result);
+        Observable<Boolean> resultObs = repository.saveSession(session);
         SessionEntity entity = new SessionEntityBuilder().withSquatSession().build();
         verify(sessionStore).storeSession(entity);
+
+        resultObs.subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean result) {
+                assertTrue("saveSession returned false", result);
+            }
+        });
     }
 
     @Test
     public void repositoryWillReturnFalseWhenSavingNullSession() {
         SessionRepository repository = new SessionRepository(mock(SessionStore.class), mapper);
 
-        boolean result = repository.saveSession(null);
+        repository.saveSession(null).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean result) {
+                assertFalse("result should have been false", result);
+            }
+        });
 
-        assertFalse("result should have been false", result);
     }
 
     @Test
@@ -88,24 +100,33 @@ public class SessionRepositoryTest {
                 .withSquatSession()
                 .withId(sessionId)
                 .build();
-        when(sessionStore.retrieveSession(anyInt())).thenReturn(sessionEntity);
+        when(sessionStore.retrieveSession(anyInt())).thenReturn(Observable.just(sessionEntity));
         SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
-        Session session = repository.loadSession(sessionId);
-
+        Observable<Session> sessionObs = repository.loadSession(sessionId);
         verify(sessionStore).retrieveSession(sessionId);
-        Session expectedSession = new Session("Squat", 5, sets);
-        assertEquals(expectedSession, session);
+        sessionObs.subscribe(new Action1<Session>() {
+            @Override
+            public void call(Session session) {
+                Session expectedSession = new Session("Squat", 5, sets);
+                assertEquals(expectedSession, session);
+            }
+        });
     }
 
     @Test
     public void repositoryReturnsNullWhenStoreDoesNotHaveSession() {
         SessionStore sessionStore = mock(SessionStore.class);
-        when(sessionStore.retrieveSession(anyInt())).thenReturn(null);
+        SessionEntity entity = null;
+        when(sessionStore.retrieveSession(anyInt())).thenReturn(Observable.just(entity));
         SessionRepository repository = new SessionRepository(sessionStore, mapper);
 
-        Session session = repository.loadSession(1);
-
-        assertNull(session);
+        Observable<Session> sessionObs = repository.loadSession(1);
+        sessionObs.subscribe(new Action1<Session>() {
+            @Override
+            public void call(Session session) {
+                assertNull(session);
+            }
+        });
     }
 }

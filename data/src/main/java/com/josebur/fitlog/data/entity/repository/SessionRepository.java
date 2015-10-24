@@ -1,16 +1,13 @@
 package com.josebur.fitlog.data.entity.repository;
 
 import com.josebur.fitlog.data.entity.SessionEntity;
-import com.josebur.fitlog.data.entity.SetEntity;
 import com.josebur.fitlog.data.entity.mapper.SessionEntityDomainMapper;
 import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
 import com.josebur.fitlog.domain.Session;
-import com.josebur.fitlog.domain.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-
-// TODO: this class should use a mapper to create instances
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * SessionRepository is the only method for persistence of {@link Session}
@@ -38,8 +35,8 @@ public class SessionRepository {
      * @param session the session to save.
      * @return true if the session was saved successfully, false otherwise.
      */
-    public boolean saveSession(Session session) {
-        if (session == null) return false;
+    public Observable<Boolean> saveSession(Session session) {
+        if (session == null) return Observable.just(false);
         SessionEntity entity = mapper.toEntity(session);
         return sessionStore.storeSession(entity);
     }
@@ -49,10 +46,13 @@ public class SessionRepository {
      * @param sessionId the id of the session to load.
      * @return the session with the given sessionId if successful, null otherwise.
      */
-    public Session loadSession(int sessionId) {
-        SessionEntity entity = sessionStore.retrieveSession(sessionId);
-        if (entity == null) return null;
-
-        return mapper.toDomainModel(entity);
+    public Observable<Session> loadSession(int sessionId) {
+        return sessionStore.retrieveSession(sessionId).map(new Func1<SessionEntity, Session>() {
+            @Override
+            public Session call(SessionEntity sessionEntity) {
+                if (sessionEntity == null) return null;
+                return mapper.toDomainModel(sessionEntity);
+            }
+        });
     }
 }
