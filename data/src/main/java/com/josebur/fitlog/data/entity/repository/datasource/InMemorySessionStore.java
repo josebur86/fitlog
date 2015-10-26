@@ -17,7 +17,7 @@ import rx.Observable;
  * 5x5 Squats with the ID of 999.
  */
 public class InMemorySessionStore implements SessionStore {
-    private Map<Integer, SessionEntity> sessions;
+    private final Map<Integer, SessionEntity> sessions;
 
     public InMemorySessionStore() {
         sessions = new HashMap<>();

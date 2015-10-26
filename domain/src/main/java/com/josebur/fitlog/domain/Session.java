@@ -5,7 +5,7 @@ import java.util.List;
 public class Session {
     private final String exercise;
     private final int repGoal;
-    private List<Set> sets;
+    private final List<Set> sets;
 
     public Session(String exercise, int repGoal, List<Set> sets) {
         this.exercise = exercise;
@@ -32,9 +32,9 @@ public class Session {
 
         Session session = (Session) o;
 
-        if (repGoal != session.repGoal) return false;
-        if (!exercise.equals(session.exercise)) return false;
-        return sets.equals(session.sets);
+        return repGoal == session.repGoal &&
+               exercise.equals(session.exercise) &&
+               sets.equals(session.sets);
 
     }
 

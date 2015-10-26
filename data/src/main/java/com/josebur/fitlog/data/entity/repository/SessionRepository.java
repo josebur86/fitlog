@@ -6,7 +6,6 @@ import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
 import com.josebur.fitlog.domain.Session;
 
 import rx.Observable;
-import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**

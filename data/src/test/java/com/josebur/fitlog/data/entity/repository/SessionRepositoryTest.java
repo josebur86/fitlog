@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 
 public class SessionRepositoryTest {
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     private List<Set> sets;
     private SessionEntityDomainMapper mapper;
@@ -118,6 +118,7 @@ public class SessionRepositoryTest {
     public void repositoryReturnsNullWhenStoreDoesNotHaveSession() {
         SessionStore sessionStore = mock(SessionStore.class);
         SessionEntity entity = null;
+        //noinspection ConstantConditions
         when(sessionStore.retrieveSession(anyInt())).thenReturn(Observable.just(entity));
         SessionRepository repository = new SessionRepository(sessionStore, mapper);
 

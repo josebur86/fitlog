@@ -86,12 +86,12 @@ public class SessionEntity {
 
         SessionEntity that = (SessionEntity) o;
 
-        if (id != that.id) return false;
-        if (userId != that.userId) return false;
-        if (workoutId != that.workoutId) return false;
-        if (exerciseId != that.exerciseId) return false;
-        if (repGoal != that.repGoal) return false;
-        return sets.equals(that.sets);
+        return id == that.id &&
+                userId == that.userId &&
+                workoutId == that.workoutId &&
+                exerciseId == that.exerciseId &&
+                repGoal == that.repGoal &&
+                sets.equals(that.sets);
     }
 
     @Override

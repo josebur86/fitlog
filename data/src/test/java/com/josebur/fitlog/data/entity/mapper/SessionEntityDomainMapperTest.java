@@ -48,6 +48,7 @@ public class SessionEntityDomainMapperTest {
     @Test
     public void toEntityReturnsNullIfSessionIsNull() {
         Session session = null;
+        //noinspection ConstantConditions
         SessionEntity entity = mapper.toEntity(session);
 
         assertNull(entity);

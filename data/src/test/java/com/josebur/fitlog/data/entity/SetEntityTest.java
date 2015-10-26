@@ -1,6 +1,5 @@
 package com.josebur.fitlog.data.entity;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -10,7 +9,7 @@ import static org.junit.Assert.assertNotEquals;
 
 public class SetEntityTest {
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void SetHasANumber() {

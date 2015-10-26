@@ -18,11 +18,13 @@ public class SetEntityDomainMapperTest {
         SetEntityDomainMapper mapper = new SetEntityDomainMapper();
 
         SetEntity entity = null;
+        //noinspection ConstantConditions
         Set set = mapper.toDomainModel(entity);
         assertNull(set);
 
         List<SetEntity> entities = null;
-        List<Set> sets = mapper.toDomainModel(entities);
+        //noinspection ConstantConditions
+        @SuppressWarnings("ConstantConditions") List<Set> sets = mapper.toDomainModel(entities);
         assertTrue("sets should be empty", sets.isEmpty());
 
         entities = new ArrayList<>();
