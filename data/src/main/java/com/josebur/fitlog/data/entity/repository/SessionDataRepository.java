@@ -5,6 +5,7 @@ import com.josebur.fitlog.data.entity.mapper.SessionEntityDomainMapper;
 import com.josebur.fitlog.data.entity.repository.datasource.SessionStore;
 import com.josebur.fitlog.domain.Session;
 
+import repository.SessionRepository;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -13,7 +14,7 @@ import rx.functions.Func1;
  * instances. The client will only interact with a SessionDataRepository
  * when requesting or storing Session objects.
  */
-public class SessionDataRepository {
+public class SessionDataRepository implements SessionRepository {
     private final SessionStore sessionStore;
     private final SessionEntityDomainMapper mapper;
 
