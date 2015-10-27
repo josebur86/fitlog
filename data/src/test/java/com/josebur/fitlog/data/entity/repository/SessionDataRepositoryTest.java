@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SessionRepositoryTest {
+public class SessionDataRepositoryTest {
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
@@ -51,20 +51,20 @@ public class SessionRepositoryTest {
     @Test
     public void repositoryThrowsIfSessionStoreIsNull() {
         thrown.expect(IllegalArgumentException.class);
-        new SessionRepository(null, null);
+        new SessionDataRepository(null, null);
     }
 
     @Test
     public void repositoryThrowsIfMapperIsNull() {
         thrown.expect(IllegalArgumentException.class);
-        new SessionRepository(mock(SessionStore.class), null);
+        new SessionDataRepository(mock(SessionStore.class), null);
     }
 
     @Test
     public void repositoryCanSaveASession() {
         SessionStore sessionStore = mock(SessionStore.class);
         when(sessionStore.storeSession(any(SessionEntity.class))).thenReturn(Observable.just(true));
-        SessionRepository repository = new SessionRepository(sessionStore, mapper);
+        SessionDataRepository repository = new SessionDataRepository(sessionStore, mapper);
 
         Session session = new Session("Squat", 5, sets);
         Observable<Boolean> resultObs = repository.saveSession(session);
@@ -81,7 +81,7 @@ public class SessionRepositoryTest {
 
     @Test
     public void repositoryWillReturnFalseWhenSavingNullSession() {
-        SessionRepository repository = new SessionRepository(mock(SessionStore.class), mapper);
+        SessionDataRepository repository = new SessionDataRepository(mock(SessionStore.class), mapper);
 
         repository.saveSession(null).subscribe(new Action1<Boolean>() {
             @Override
@@ -101,7 +101,7 @@ public class SessionRepositoryTest {
                 .withId(sessionId)
                 .build();
         when(sessionStore.retrieveSession(anyInt())).thenReturn(Observable.just(sessionEntity));
-        SessionRepository repository = new SessionRepository(sessionStore, mapper);
+        SessionDataRepository repository = new SessionDataRepository(sessionStore, mapper);
 
         Observable<Session> sessionObs = repository.loadSession(sessionId);
         verify(sessionStore).retrieveSession(sessionId);
@@ -120,7 +120,7 @@ public class SessionRepositoryTest {
         SessionEntity entity = null;
         //noinspection ConstantConditions
         when(sessionStore.retrieveSession(anyInt())).thenReturn(Observable.just(entity));
-        SessionRepository repository = new SessionRepository(sessionStore, mapper);
+        SessionDataRepository repository = new SessionDataRepository(sessionStore, mapper);
 
         Observable<Session> sessionObs = repository.loadSession(1);
         sessionObs.subscribe(new Action1<Session>() {

@@ -9,20 +9,20 @@ import rx.Observable;
 import rx.functions.Func1;
 
 /**
- * SessionRepository is the only method for persistence of {@link Session}
- * instances. The client will only interact with a SessionRepository
+ * SessionDataRepository is the only method for persistence of {@link Session}
+ * instances. The client will only interact with a SessionDataRepository
  * when requesting or storing Session objects.
  */
-public class SessionRepository {
+public class SessionDataRepository {
     private final SessionStore sessionStore;
     private final SessionEntityDomainMapper mapper;
 
     /**
-     * Creates a SessionRepository.
+     * Creates a SessionDataRepository.
      * @param sessionStore a storage mechanism for the repository to use.
      * @throws IllegalArgumentException if the sessionStore or mapper is null.
      */
-    public SessionRepository(SessionStore sessionStore, SessionEntityDomainMapper mapper) {
+    public SessionDataRepository(SessionStore sessionStore, SessionEntityDomainMapper mapper) {
         if (sessionStore == null) throw new IllegalArgumentException("sessionStore");
         if (mapper == null) throw new IllegalArgumentException("mapper");
         this.sessionStore = sessionStore;
