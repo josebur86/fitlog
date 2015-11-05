@@ -1,23 +1,19 @@
 package com.josebur.fitlog;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.josebur.fitlog.utils.CountUpTimer;
-
 public class ExerciseSessionActivity extends AppCompatActivity implements RestTimerService.TimerListener {
-    private TextView secondsTextView; // TODO: throw this in a service that displays in a notification.
+    private static final long SECOND_MILLIS = 1000;
+    private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private TextView secondsTextView;
 
     RestTimerService restTimerService;
     boolean bound = false;
@@ -91,8 +87,8 @@ public class ExerciseSessionActivity extends AppCompatActivity implements RestTi
 
     @Override
     public void onTick(long time) {
-        secondsTextView.setText(String.format("%d", time / 1000));
+        long minutes = time / MINUTE_MILLIS;
+        long seconds = time % MINUTE_MILLIS / SECOND_MILLIS;
+        secondsTextView.setText(String.format("%d:%02d", minutes, seconds));
     }
-
-
 }

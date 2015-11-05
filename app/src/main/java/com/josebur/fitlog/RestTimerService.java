@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -16,22 +17,45 @@ import com.josebur.fitlog.utils.CountUpTimer;
 
 public class RestTimerService extends Service {
     private final static int NOTIFICATION_ID = 1;
+    private static final long SECOND_MILLIS = 1000;
+    private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
+    private final static String BELL_TIME_1 = "90";
+    private final static String BELL_STOP_TIME_1 = "93";
+    private final static String BELL_TIME_2 = "180";
+    private final static String BELL_STOP_TIME_2 = "183";
+    private MediaPlayer mediaPlayer;
     private NotificationManager notificationManager;
     private TimerListener listener;
     private final IBinder binder = new TimerBinder();
     private final CountUpTimer timer = new CountUpTimer(1000) {
         @Override
         public void onTick(long timeSinceStarted) {
+            long minutes = timeSinceStarted / MINUTE_MILLIS;
+            long seconds = timeSinceStarted % MINUTE_MILLIS / SECOND_MILLIS;
+            String time = String.format("%d", timeSinceStarted / 1000);
             Notification notification = createNotificationBuilder()
-                    .setContentText(String.format("%d", timeSinceStarted / 1000))
+                    .setContentText(String.format("%d:%02d", minutes, seconds))
                     .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
+
+            if (time.equals(BELL_TIME_1) || time.equals(BELL_TIME_2)) {
+                playBell();
+            }
+
+            if (time.equals(BELL_STOP_TIME_1) || time.equals(BELL_STOP_TIME_2)) {
+                releaseMediaPlayer();
+            }
 
             if (listener != null) {
                 listener.onTick(timeSinceStarted);
             }
         }
     };
+
+    @Override
+    public void onDestroy() {
+        releaseMediaPlayer();
+    }
 
     public class TimerBinder extends Binder {
         RestTimerService getService() {
@@ -61,7 +85,6 @@ public class RestTimerService extends Service {
     public void startTimer() {
         if (timer.isStopped()) {
             timer.start();
-
             startForeground(NOTIFICATION_ID, createNotificationBuilder().build());
         }
     }
@@ -98,5 +121,17 @@ public class RestTimerService extends Service {
         builder.setContentIntent(resultPendingIntent);
 
         return builder;
+    }
+
+    private void playBell() {
+        mediaPlayer = MediaPlayer.create(this, R.raw.bell);
+        mediaPlayer.start();
+    }
+
+    private void releaseMediaPlayer() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
