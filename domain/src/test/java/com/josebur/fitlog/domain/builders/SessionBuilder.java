@@ -29,7 +29,7 @@ public class SessionBuilder {
 
     public SessionBuilder withSquatSession() {
         repGoal = 5;
-        sets = new ArrayList<>();
+        sets = new ArrayList<Set>();
         sets.add(new Set(1));
         sets.add(new Set(2));
         sets.add(new Set(3));

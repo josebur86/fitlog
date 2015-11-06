@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.josebur.fitlog.domain.TimeFormatter;
+
 public class ExerciseSessionActivity extends AppCompatActivity implements RestTimerService.TimerListener {
     private static final long SECOND_MILLIS = 1000;
     private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
@@ -87,8 +89,6 @@ public class ExerciseSessionActivity extends AppCompatActivity implements RestTi
 
     @Override
     public void onTick(long time) {
-        long minutes = time / MINUTE_MILLIS;
-        long seconds = time % MINUTE_MILLIS / SECOND_MILLIS;
-        secondsTextView.setText(String.format("%d:%02d", minutes, seconds));
+        secondsTextView.setText(TimeFormatter.fromMillis(time));
     }
 }

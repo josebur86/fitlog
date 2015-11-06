@@ -33,7 +33,7 @@ public class GetSetsForSessionTest {
         when(provider.getPostExecuteScheduler()).thenReturn(scheduler);
         GetSetsForSession useCase = new GetSetsForSession(repository, provider);
 
-        TestSubscriber<Session> subscriber = new TestSubscriber<>();
+        TestSubscriber<Session> subscriber = new TestSubscriber<Session>();
         useCase.execute(subscriber);
 
         verify(provider, atLeastOnce()).getUseCaseScheduler();

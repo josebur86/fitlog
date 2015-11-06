@@ -31,7 +31,7 @@ public class SessionTest {
     @Test
     public void sessionHasAListOfSets() {
         int repGoal = 5;
-        List<Set> sets = new ArrayList<>();
+        List<Set> sets = new ArrayList<Set>();
         sets.add(new Set(1));
         sets.add(new Set(2));
 

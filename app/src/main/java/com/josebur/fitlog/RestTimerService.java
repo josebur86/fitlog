@@ -14,26 +14,23 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.josebur.fitlog.domain.Bell;
+import com.josebur.fitlog.domain.TimeFormatter;
 import com.josebur.fitlog.utils.CountUpTimer;
 
 public class RestTimerService extends Service implements MediaPlayerFactory {
     private final static int NOTIFICATION_ID = 1;
     private static final long SECOND_MILLIS = 1000;
-    private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private final AndroidBell bell;
-    private final static String BELL_STOP_TIME_1 = "93";
-    private final static String BELL_STOP_TIME_2 = "183";
+    private final static long BELL_STOP_TIME_1 = 93;
+    private final static long BELL_STOP_TIME_2 = 183;
     private NotificationManager notificationManager;
     private TimerListener listener;
     private final IBinder binder = new TimerBinder();
     private final CountUpTimer timer = new CountUpTimer(1000) {
         @Override
         public void onTick(long timeSinceStarted) {
-            long minutes = timeSinceStarted / MINUTE_MILLIS;
-            long seconds = timeSinceStarted % MINUTE_MILLIS / SECOND_MILLIS;
-            String time = String.format("%d", timeSinceStarted / 1000);
             Notification notification = createNotificationBuilder()
-                    .setContentText(String.format("%d:%02d", minutes, seconds))
+                    .setContentText(TimeFormatter.fromMillis(timeSinceStarted))
                     .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
 
@@ -42,7 +39,7 @@ public class RestTimerService extends Service implements MediaPlayerFactory {
                 bell.ring();
             }
 
-            if (time.equals(BELL_STOP_TIME_1) || time.equals(BELL_STOP_TIME_2)) {
+            if (BELL_STOP_TIME_1 == second || BELL_STOP_TIME_2 == second) {
                 bell.release();
             }
 
