@@ -13,17 +13,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.josebur.fitlog.domain.Bell;
 import com.josebur.fitlog.utils.CountUpTimer;
 
-public class RestTimerService extends Service {
+public class RestTimerService extends Service implements MediaPlayerFactory {
     private final static int NOTIFICATION_ID = 1;
     private static final long SECOND_MILLIS = 1000;
     private static final long MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private final static String BELL_TIME_1 = "90";
+    private final AndroidBell bell;
     private final static String BELL_STOP_TIME_1 = "93";
-    private final static String BELL_TIME_2 = "180";
     private final static String BELL_STOP_TIME_2 = "183";
-    private MediaPlayer mediaPlayer;
     private NotificationManager notificationManager;
     private TimerListener listener;
     private final IBinder binder = new TimerBinder();
@@ -38,12 +37,13 @@ public class RestTimerService extends Service {
                     .build();
             notificationManager.notify(NOTIFICATION_ID, notification);
 
-            if (time.equals(BELL_TIME_1) || time.equals(BELL_TIME_2)) {
-                playBell();
+            long second = timeSinceStarted / SECOND_MILLIS;
+            if (bell.shouldRing(second)) {
+                bell.ring();
             }
 
             if (time.equals(BELL_STOP_TIME_1) || time.equals(BELL_STOP_TIME_2)) {
-                releaseMediaPlayer();
+                bell.release();
             }
 
             if (listener != null) {
@@ -52,10 +52,15 @@ public class RestTimerService extends Service {
         }
     };
 
+    public RestTimerService() {
+        bell = new AndroidBell(this);
+    }
+
     @Override
     public void onDestroy() {
-        releaseMediaPlayer();
+        bell.release();
     }
+
 
     public class TimerBinder extends Binder {
         RestTimerService getService() {
@@ -123,15 +128,33 @@ public class RestTimerService extends Service {
         return builder;
     }
 
-    private void playBell() {
-        mediaPlayer = MediaPlayer.create(this, R.raw.bell);
-        mediaPlayer.start();
+    @Override
+    public MediaPlayer createMediaPlayer() {
+        return MediaPlayer.create(this, R.raw.bell);
     }
 
-    private void releaseMediaPlayer() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
+    private static class AndroidBell extends Bell {
+
+        private final MediaPlayerFactory mediaPlayerFactory;
+        private MediaPlayer mediaPlayer = null;
+
+        public AndroidBell(MediaPlayerFactory mediaPlayerFactory) {
+            this.mediaPlayerFactory = mediaPlayerFactory;
+        }
+
+        @Override
+        public void ring() {
+            if (mediaPlayer == null) {
+                mediaPlayer = mediaPlayerFactory.createMediaPlayer();
+            }
+            mediaPlayer.start();
+        }
+
+        public void release() {
+            if (mediaPlayer != null) {
+                mediaPlayer.release();
+                mediaPlayer = null;
+            }
         }
     }
 }
